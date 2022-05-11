@@ -5,26 +5,29 @@ import createError from "http-errors";
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function getAuctionById(event, context) {
-  let auction;
   const { id } = event.pathParameters;
+  const { amount } = event.body;
 
   var params = {
     TableName: process.env.AUCTIONS_TABLE_NAME,
     Key: { id },
+    UpdateExpression: "set highestBid.amount = :amount",
+    ExpressionAttributeValues: {
+      ":amount": amount,
+    },
+    ReturnValues: "ALL_NEW",
   };
 
+  let updatedAuction;
   try {
-    const result = await dynamodb.get(params).promise();
-    auction = result.Item;
-    if (!auction) {
-      throw new createError.NotFound();
-    }
+    const result = await dynamodb.update(params).promise();
+    updatedAuction = result.Attributes;
   } catch (error) {
     throw new createError.InternalServerError(error);
   }
   return {
     statusCode: 200,
-    body: JSON.stringify(auction),
+    body: JSON.stringify(updatedAuction),
   };
 }
 
