@@ -8,6 +8,8 @@ provider:
   runtime: nodejs14.x
   memorySize: 256
   stage: ${opt:stage, 'dev'}
+  environment:
+    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
   region: eu-central-1
   iamRoleStatements:
     - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
@@ -23,5 +25,10 @@ functions:
       - http:
           method: POST
           path: /auction
+
+custom:
+  AuctionsTable:
+    name: !Ref AuctionsTable
+    arn: !GetAtt AuctionsTable.Arn
 
 
