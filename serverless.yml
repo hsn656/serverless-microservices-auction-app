@@ -49,6 +49,8 @@ functions:
     #   - schedule: rate(1 minute)
 
 custom:
+  bundle:
+    linting: false
   AuctionsTable:
     name: !Ref AuctionsTable
     arn: !GetAtt AuctionsTable.Arn
