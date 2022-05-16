@@ -1,0 +1,16 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "aws cognito ",
+  "author": "Hassan Mohamed <hassan.mhmd656@gmail.com>",
+  "dependencies": {
+    "@middy/core": "^2.5.7",
+    "@middy/http-error-handler": "^2.5.7",
+    "@middy/http-event-normalizer": "^2.5.7",
+    "@middy/http-json-body-parser": "^2.5.7",
+    "@middy/validator": "^3.0.2",
+    "aws-sdk": "^2.1135.0",
+    "http-errors": "^2.0.0",
+    "serverless-bundle": "^5.3.0"
+  }
+}

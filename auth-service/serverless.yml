@@ -1,0 +1,83 @@
+service: serverless-cognito-auth
+
+plugins:
+  - serverless-bundle
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-central-1
+  memorySize: 128
+  environment:
+    user_pool_id: { Ref: UserPool }
+    client_id: { Ref: UserClient }
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+      Resource: "*"
+
+resources:
+    Resources:
+      UserPool:
+        Type: AWS::Cognito::UserPool
+        Properties:
+          UserPoolName: serverless-auth-pool
+          Schema:
+            - Name: email
+              Required: true
+              Mutable: true
+          Policies:
+            PasswordPolicy:
+              MinimumLength: 6
+          AutoVerifiedAttributes: ["email"]
+
+      UserClient:
+        Type: AWS::Cognito::UserPoolClient
+        Properties:
+          ClientName: user-pool-ui
+          GenerateSecret: false
+          UserPoolId: { Ref: UserPool }
+          AccessTokenValidity: 5
+          IdTokenValidity: 5
+          ExplicitAuthFlows:
+            - "ADMIN_NO_SRP_AUTH"
+
+functions:
+  loginUser:
+    handler: src/handlers/login.handler
+    events:
+      - http:
+          path: user/login
+          method: post
+          cors: true
+
+  signupUser:
+    handler: src/handlers/signup.handler
+    events:
+      - http:
+          path: user/signup
+          method: post
+          cors: true
+
+  privateAPI:
+    handler: src/handlers/private.handler
+    events:
+      - http:
+          path: user/private
+          method: post
+          cors: true
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn:
+              Fn::GetAtt:
+                - UserPool
+                - Arn
+            claims:
+              - email
+custom:
+  bundle:
+    linting: false
