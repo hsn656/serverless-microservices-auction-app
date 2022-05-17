@@ -30,7 +30,7 @@ functions:
           authorizer:
             name: PrivateAuthorizer
             type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
             claims:
               - email
 
@@ -44,7 +44,7 @@ functions:
           authorizer:
             name: PrivateAuthorizer
             type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
             claims:
               - email
   getAuctionById:
@@ -57,7 +57,7 @@ functions:
           authorizer:
             name: PrivateAuthorizer
             type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
             claims:
               - email
   placeBid:
@@ -70,7 +70,7 @@ functions:
           authorizer:
             name: PrivateAuthorizer
             type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
             claims:
               - email
   processAuction:

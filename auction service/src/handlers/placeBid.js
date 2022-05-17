@@ -9,13 +9,22 @@ import { getAuction } from "../lib/getAuction";
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function placeBid(event, context) {
-  const { id } = event.pathParameters;
+  const { id } = event.path;
   const { amount } = event.body;
+  const {email:bidderEmail}=event.cognitoPoolClaims;
 
   const auction = await getAuction(id);
-
+    
   if (auction.status !== "OPEN") {
     throw new createError.Forbidden("you can't bid on closed auction");
+  }
+
+  if(auction.highestBid.bidder === bidderEmail){
+    throw new createError.Forbidden("you already the highest bidder")
+  }
+
+  if(auction.seller === bidderEmail){
+    throw new createError.Forbidden("you can't bid on your auction")
   }
 
   if (amount <= auction.highestBid.amount) {
@@ -26,9 +35,10 @@ async function placeBid(event, context) {
   var params = {
     TableName: process.env.AUCTIONS_TABLE_NAME,
     Key: { id },
-    UpdateExpression: "set highestBid.amount = :amount",
+    UpdateExpression: "set highestBid.amount = :amount, highestBid.bidder = :bidder",
     ExpressionAttributeValues: {
       ":amount": amount,
+      ":bidder": bidderEmail
     },
     ReturnValues: "ALL_NEW",
   };
@@ -41,8 +51,7 @@ async function placeBid(event, context) {
     throw new createError.InternalServerError(error);
   }
   return {
-    statusCode: 200,
-    body: JSON.stringify(updatedAuction),
+    auction:updatedAuction
   };
 }
 
