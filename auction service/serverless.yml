@@ -25,6 +25,15 @@ functions:
       - http:
           method: POST
           path: /auction
+          cors: true
+          integration: lambda
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            claims:
+              - email
+              
   getAuctions:
     handler: src/handlers/getAuctions.handler
     events:
