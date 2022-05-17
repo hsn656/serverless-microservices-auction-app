@@ -33,25 +33,46 @@ functions:
             arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
             claims:
               - email
-              
+
   getAuctions:
     handler: src/handlers/getAuctions.handler
     events:
       - http:
           method: GET
           path: /auctions
+          integration: lambda
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            claims:
+              - email
   getAuctionById:
     handler: src/handlers/getAuctionById.handler
     events:
       - http:
           method: GET
           path: /auctions/{id}
+          integration: lambda
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            claims:
+              - email
   placeBid:
     handler: src/handlers/placeBid.handler
     events:
       - http:
           method: PATCH
           path: /auctions/{id}/bid
+          integration: lambda
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:eu-central-1:553218610770:userpool/eu-central-1_D8nQnDQ8y
+            claims:
+              - email
   processAuction:
     handler: src/handlers/processAuction.handler
     # events:

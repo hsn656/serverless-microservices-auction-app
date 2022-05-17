@@ -9,13 +9,12 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function getAuctionById(event, context) {
   let auction;
-  const { id } = event.pathParameters;
+  const { id } = event.path;
 
   auction = await getAuction(id);
 
   return {
-    statusCode: 200,
-    body: JSON.stringify(auction),
+    auction,
   };
 }
 

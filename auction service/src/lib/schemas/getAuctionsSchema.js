@@ -1,6 +1,6 @@
 const schema = {
     properties: {
-      queryStringParameters: {
+      query: {
         type: 'object',
         properties: {
           status: {
@@ -13,7 +13,7 @@ const schema = {
       },
     },
     required: [
-      'queryStringParameters',
+      'query',
     ],
   };
   

@@ -40,7 +40,7 @@ async function createAuction(event, context) {
   }
 
   return {
-    body: auction
+    auction
   };
 }
 

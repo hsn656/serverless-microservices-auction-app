@@ -9,8 +9,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function getAuctions(event, context) {
   let auctions;
-  
-  const {status}= event.queryStringParameters;  
+  const {status}= event.query;
   const params = {
     TableName: process.env.AUCTIONS_TABLE_NAME,
     IndexName: 'statusAndEndingAt',
@@ -29,12 +28,12 @@ async function getAuctions(event, context) {
     throw new createError.InternalServerError(error);
   }
   return {
-    statusCode: 200,
-    body: JSON.stringify(auctions),
+    auctions
   };
 }
 
-export const handler = commonMiddleware(getAuctions).use(
+export const handler = commonMiddleware(getAuctions)
+.use(
   validator({
     inputSchema: getAuctionsSchema,
     ajvOptions: {
