@@ -10,6 +10,7 @@ then both you and bidder will recieve email informing you with results.
 - SQS
 - SES
 - AWS Cognito
+- Dynamo DB
 
 ## What's included
 * [serverless-bundle plugin](https://www.npmjs.com/package/serverless-pseudo-parameters): Bundler based on the serverless-webpack plugin - requires zero configuration and fully compatible with ES6/ES7 features.
@@ -23,7 +24,7 @@ cd auth-service/
 npm install
 sls deploy --verbose
 
-cd auth-service/
+cd notification-service/
 npm install
 sls deploy --verbose
 
@@ -31,9 +32,6 @@ cd auction\ service/
 npm install
 sls deploy --verbose
 
-cd notification-service/
-npm install
-sls deploy --verbose
 ```
 
 You are ready to go!
