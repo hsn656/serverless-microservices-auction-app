@@ -62,6 +62,15 @@ functions:
           path: /auctions/{id}/bid
           integration: lambda
           authorizer: ${self:custom.Authorizer}
+  
+  uploadAuctionPicture:
+    handler: src/handlers/uploadAuctionPicture.handler
+    events:
+      - http:
+          method: PATCH
+          path: /auctions/{id}/picture
+          integration: lambda
+          authorizer: ${self:custom.Authorizer}
 
   processAuction:
     handler: src/handlers/processAuction.handler
