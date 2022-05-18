@@ -3,7 +3,7 @@ Auction app where you login create your auction upload its image, then you can v
 people can bid on you auctions so as you can, after 1 hour of your auction creation, your auction will be ended for the highest bidder
 then both you and bidder will recieve email informing you with results.
   
-##here are Amazon Web Serevices used:
+## here are Amazon Web Serevices used:
 - Lambda Function
 - API Gateway
 - S3
@@ -11,6 +11,8 @@ then both you and bidder will recieve email informing you with results.
 - SES
 - AWS Cognito
 - Dynamo DB
+
+<img src="project.png">
 
 ## What's included
 * [serverless-bundle plugin](https://www.npmjs.com/package/serverless-pseudo-parameters): Bundler based on the serverless-webpack plugin - requires zero configuration and fully compatible with ES6/ES7 features.
