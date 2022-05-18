@@ -10,9 +10,11 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+    MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
   region: eu-central-1
   iamRoleStatements:
     - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+    - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
 
 resources:
   Resources:
@@ -27,12 +29,7 @@ functions:
           path: /auction
           cors: true
           integration: lambda
-          authorizer:
-            name: PrivateAuthorizer
-            type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
-            claims:
-              - email
+          authorizer: ${self:custom.Authorizer}
 
   getAuctions:
     handler: src/handlers/getAuctions.handler
@@ -41,12 +38,8 @@ functions:
           method: GET
           path: /auctions
           integration: lambda
-          authorizer:
-            name: PrivateAuthorizer
-            type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
-            claims:
-              - email
+          authorizer: ${self:custom.Authorizer}
+
   getAuctionById:
     handler: src/handlers/getAuctionById.handler
     events:
@@ -54,12 +47,8 @@ functions:
           method: GET
           path: /auctions/{id}
           integration: lambda
-          authorizer:
-            name: PrivateAuthorizer
-            type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
-            claims:
-              - email
+          authorizer: ${self:custom.Authorizer}
+
   placeBid:
     handler: src/handlers/placeBid.handler
     events:
@@ -67,12 +56,8 @@ functions:
           method: PATCH
           path: /auctions/{id}/bid
           integration: lambda
-          authorizer:
-            name: PrivateAuthorizer
-            type: COGNITO_USER_POOLS
-            arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
-            claims:
-              - email
+          authorizer: ${self:custom.Authorizer}
+
   processAuction:
     handler: src/handlers/processAuction.handler
     # events:
@@ -81,8 +66,17 @@ functions:
 custom:
   bundle:
     linting: false
+  MailQueue:
+    arn: ${cf:notification-service-${self:provider.stage}.MailQueueArn}
+    url: ${cf:notification-service-${self:provider.stage}.MailQueueUrl}
   AuctionsTable:
     name: !Ref AuctionsTable
     arn: !GetAtt AuctionsTable.Arn
+  Authorizer:
+      name: PrivateAuthorizer
+      type: COGNITO_USER_POOLS
+      arn: arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/eu-central-1_D8nQnDQ8y
+      claims:
+        - email
 
 
